@@ -1,0 +1,51 @@
+build
+install
+devel
+
+#repos
+.git
+
+#clion
+.idea
+
+#cmake
+cmake-build-debug
+gtest
+CMakeFiles
+catkin_generated
+cmake
+
+#vim
+*/.#*
+.#*
+
+#temp files
+*~
+.*~
+default_warehouse_mongo_db  # from moveit 233333
+
+# Compiled Object files
+*.slo
+*.lo
+*.o
+*.obj
+
+# Precompiled Headers
+*.gch
+*.pch
+
+# Compiled Dynamic libraries
+*.so
+*.dylib
+*.dll
+
+# Compiled Static libraries
+*.lai
+*.la
+*.a
+*.lib
+
+# Executables
+*.exe
+*.out
+*.app
