@@ -20,16 +20,18 @@ catkin_simple()
 # example boost usage
 # find_package(Boost REQUIRED COMPONENTS system thread)
 
-# C++0x support - not quite the same as final C++11!
 # use carefully;  can interfere with point-cloud library
-# SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++0x")
+SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
 
 # Libraries: uncomment the following and edit arguments to create a new library
 # cs_add_library(my_lib src/my_lib.cpp)   
+cs_add_library(RobotCommander src/RobotCommander.cpp)
 
 # Executables: uncomment the following and edit arguments to compile new nodes
 # may add more of these lines for more nodes from the same package
 # cs_add_executable(example src/example.cpp)
+cs_add_executable(laser_alarm src/lidar_alarm.cpp)
+cs_add_executable(keyboard_controller src/keyboard_controller.cpp)
 
 #the following is required, if desire to link a node in this package with a library created in this same package
 # edit the arguments to reference the named node and named library within this package

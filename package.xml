@@ -1,31 +1,40 @@
 <?xml version="1.0"?>
 <package>
-  <name>simple_mobile_robot</name>
-  <version>1.0.0</version>
-  <description>The simple_mobile_robot package</description>
+    <name>simple_mobile_robot</name>
+    <version>1.0.0</version>
+    <description>The simple_mobile_robot package</description>
 
-  <author email="sxt437@case.edu">Shipei Tian</author>
-  <maintainer email="sxt437@case.edu">Shipei Tian</maintainer>
+    <author email="sxt437@case.edu">Shipei Tian</author>
+    <maintainer email="sxt437@case.edu">Shipei Tian</maintainer>
 
-  <license>BSD</license>
+    <license>BSD</license>
 
-  <buildtool_depend>catkin</buildtool_depend>
-  <buildtool_depend>catkin_simple</buildtool_depend>
+    <buildtool_depend>catkin</buildtool_depend>
+    <buildtool_depend>catkin_simple</buildtool_depend>
 
-  <build_depend>message_generation</build_depend>
+    <build_depend>message_generation</build_depend>
+    <build_depend>roscpp</build_depend>
+    <build_depend>sensor_msgs</build_depend>
+    <build_depend>std_msgs</build_depend>
+    <build_depend>geometry_msgs</build_depend>
 
-  <run_depend>message_runtime</run_depend>
-  <run_depend>amcl</run_depend>
-  <run_depend>map_server</run_depend>
-  <run_depend>xacro</run_depend>
-  <run_depend>gazebo_ros</run_depend>
-  <run_depend>gazebo_ros_control</run_depend>
-  <run_depend>ros_controllers</run_depend>
-  <run_depend>controller_manager</run_depend>
-  <run_depend>twist_mux</run_depend>
-  <run_depend>interactive_marker_twist_server</run_depend>
-  <run_depend>joint_state_publisher</run_depend>
-  <run_depend>robot_state_publisher</run_depend>
+    <run_depend>message_runtime</run_depend>
+    <run_depend>roscpp</run_depend>
+    <run_depend>sensor_msgs</run_depend>
+    <run_depend>std_msgs</run_depend>
+    <run_depend>geometry_msgs</run_depend>
 
-  <export></export>
+    <run_depend>amcl</run_depend>
+    <run_depend>map_server</run_depend>
+    <run_depend>xacro</run_depend>
+    <run_depend>gazebo_ros</run_depend>
+    <run_depend>gazebo_ros_control</run_depend>
+    <run_depend>ros_controllers</run_depend>
+    <run_depend>controller_manager</run_depend>
+    <run_depend>twist_mux</run_depend>
+    <run_depend>interactive_marker_twist_server</run_depend>
+    <run_depend>joint_state_publisher</run_depend>
+    <run_depend>robot_state_publisher</run_depend>
+
+    <export></export>
 </package>

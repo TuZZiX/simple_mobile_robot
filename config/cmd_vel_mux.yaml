@@ -8,7 +8,7 @@ topics:
   name    : keyboard
   topic   : key_vel
   timeout : 0.5
-  priority: 20
+  priority: 30
 -
   name    : rqt
   topic   : rqt_vel
