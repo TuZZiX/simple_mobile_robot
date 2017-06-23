@@ -9,6 +9,11 @@ topics:
   topic   : key_vel
   timeout : 0.5
   priority: 20
+-
+  name    : rqt
+  topic   : rqt_vel
+  timeout : 0.5
+  priority: 30
 locks:
 -
   name    : pause

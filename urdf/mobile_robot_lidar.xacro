@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <robot xmlns:xacro="http://www.ros.org/wiki/xacro">
   <xacro:macro name="mobile_robot_lidar" params="prefix">
-    <!-- copy from robot macro -->
+    <!-- copied from robot macro -->
     <xacro:property name="bodylen" value="0.5461"/>
     <xacro:property name="lidarlen" value="0.1"/>
     <xacro:property name="lidarOZ" value="-0.03"/>
@@ -45,13 +45,13 @@
         <ray>
           <scan>
             <horizontal>
-              <samples>200</samples>
+              <samples>150</samples>
               <resolution>1</resolution>
               <min_angle>-1.570796</min_angle>
               <max_angle>1.570796</max_angle>
             </horizontal>
           </scan>
-          <resolution>0.001</resolution>
+          <!-- <resolution>0.001</resolution> -->
           <range>
             <min>0.10</min>
             <max>60.0</max>

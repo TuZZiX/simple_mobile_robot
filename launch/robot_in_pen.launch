@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <launch>
-
+	<!-- Start world with starting_pen -->
 	<include file="$(find gazebo_ros)/launch/empty_world.launch">
 		<arg name="world_name" value="$(find simple_mobile_robot)/worlds/robot_in_pen.world"/>
 	</include>
@@ -10,7 +10,8 @@
 
 	<!-- Spawn the robot from parameter server into Gazebo -->
 	<node name="spawn_urdf" pkg="gazebo_ros" type="spawn_model" args="-param robot_description -urdf -model mobile_robot" />
-	<!-- start a robot_state_publisher -->
+
+	<!-- Start a robot_state_publisher -->
 	<node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" />
 
 	<!-- launch rviz using a specific config file -->
@@ -20,12 +21,12 @@
 
 	<node pkg="amcl" type="amcl" name="amcl" output="screen"/>
 
-  <!-- Load controller configuration -->
-  <rosparam file="$(find simple_mobile_robot)/config/controller.yaml" command="load" />
   <!-- Spawn controllers -->
-  <node name="base_controller_spawner" pkg="controller_manager" type="spawner"
-        args="joint_publisher velocity_controller" respawn="false" output="screen" />
+  <!-- <rosparam file="$(find simple_mobile_robot)/config/controller.yaml" command="load" /> -->
+  <!-- <node name="joint_publisher_spawner" pkg="controller_manager" type="spawner" args="joint_publisher" respawn="false" output="screen" /> -->
+	<!-- <node name="velocity_controller_spawner" pkg="controller_manager" type="spawner" args="velocity_controller" respawn="false" output="screen" /> -->
 
+  <!-- interactive marker -->
   <node pkg="interactive_marker_twist_server" type="marker_server" name="twist_marker_server" output="screen"/>
 
   <node pkg="twist_mux" type="twist_mux" name="twist_mux">
