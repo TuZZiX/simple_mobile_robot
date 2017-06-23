@@ -1,0 +1,53 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+  <xacro:macro name="mobile_robot_transmission" params="prefix">
+    <xacro:arg name="use_gazebo_plugin" default="false"/>
+    <xacro:if value="$(arg use_gazebo_plugin)">
+      <gazebo>
+        <plugin name="differential_drive_controller" filename="libgazebo_ros_diff_drive.so">
+          <alwaysOn>true</alwaysOn>
+          <updateRate>100</updateRate>
+          <leftJoint>right_wheel_joint</leftJoint>
+          <rightJoint>left_wheel_joint</rightJoint>
+          <wheelSeparation>${track}</wheelSeparation>
+          <wheelDiameter>${tirediam}</wheelDiameter>
+          <torque>200</torque>
+          <commandTopic>cmd_vel</commandTopic>
+          <odometryTopic>odom</odometryTopic>
+          <odometryFrame>odom</odometryFrame>
+          <robotBaseFrame>base_link</robotBaseFrame>
+          <legacyMode>false</legacyMode>
+          <publishWheelTF>true</publishWheelTF>
+          <publishWheelJointState>true</publishWheelJointState>
+        </plugin>
+      </gazebo>
+    </xacro:if>
+
+    <xacro:unless value="$(arg use_gazebo_plugin)">
+      <transmission name="left_wheel_trans" type="SimpleTransmission">
+        <type>transmission_interface/SimpleTransmission</type>
+        <actuator name="left_wheel_motor">
+          <mechanicalReduction>1</mechanicalReduction>
+        </actuator>
+        <joint name="left_wheel_joint">
+          <hardwareInterface>hardware_interface/VelocityJointInterface</hardwareInterface>
+        </joint>
+      </transmission>
+      <transmission name="right_wheel_trans" type="SimpleTransmission">
+        <type>transmission_interface/SimpleTransmission</type>
+        <actuator name="right_wheel_motor">
+          <mechanicalReduction>1</mechanicalReduction>
+        </actuator>
+        <joint name="right_wheel_joint">
+          <hardwareInterface>hardware_interface/VelocityJointInterface</hardwareInterface>
+        </joint>
+      </transmission>
+      <gazebo>
+        <plugin name="ros_control" filename="libgazebo_ros_control.so">
+          <robotNamespace></robotNamespace>
+          <!-- <robotSimType>gazebo_ros_control/DefaultRobotHWSim</robotSimType> -->
+        </plugin>
+      </gazebo>
+    </xacro:unless>
+  </xacro:macro>
+</robot>
