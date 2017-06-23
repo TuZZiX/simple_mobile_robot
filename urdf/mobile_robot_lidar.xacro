@@ -3,7 +3,7 @@
   <xacro:macro name="mobile_robot_lidar" params="prefix">
     <!-- copied from robot macro -->
     <xacro:property name="bodylen" value="0.5461"/>
-    <xacro:property name="lidarlen" value="0.1"/>
+    <xacro:property name="lidarlen" value="0.05"/>
     <xacro:property name="lidarOZ" value="-0.03"/>
     <!-- add a simulated lidar, including visual, collision and inertial properties, and physics simulation-->
     <link name="lidar_link">

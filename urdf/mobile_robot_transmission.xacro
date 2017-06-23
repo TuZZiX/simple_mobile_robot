@@ -26,7 +26,7 @@
           <publishWheelTF>true</publishWheelTF>
           <publishTf>true</publishTf>
           <publishWheelJointState>true</publishWheelJointState>
-          <wheelAcceleration>10</wheelAcceleration>
+          <wheelAcceleration>40</wheelAcceleration>
           <wheelTorque>100</wheelTorque>
         </plugin>
       </gazebo>

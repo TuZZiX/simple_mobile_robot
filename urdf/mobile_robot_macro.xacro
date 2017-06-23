@@ -3,10 +3,9 @@
   <xacro:macro name="mobile_robot_macro" params="prefix">
     <!-- define the base-link origin to lie at floor level, between the drive wheels-->
     <!--main body is a simple box; origin is a center of box-->
-    <xacro:property name="bodylen" value="0.5461"/>
-    <xacro:property name="bodywidth" value="0.4572"/>
-    <xacro:property name="bodyheight" value="0.2"/>
-    <xacro:property name="bodyclearance" value="0.4"/>
+    <xacro:property name="bodylen" value="0.5061"/>
+    <xacro:property name="bodywidth" value="0.4072"/>
+    <xacro:property name="bodyheight" value="0.16"/>
     <!--clearance from bottom of box to ground-->
     <!-- derived values-->
     <xacro:property name="half_bodylen" value="${bodylen/2.0}"/>
@@ -14,19 +13,19 @@
     <!-- placement of main body relative to base link frame -->
     <xacro:property name="bodyOX" value="${-half_bodylen}"/>
     <xacro:property name="bodyOY" value="0"/>
-    <xacro:property name="bodyOZ" value="0.45"/>
+    <xacro:property name="bodyOZ" value="0.35"/>
 
     <!-- define the drive-wheel dimensions-->
     <xacro:property name="tirediam" value="0.3302"/>
     <xacro:property name="tirerad" value="${tirediam/2.0}"/>
     <xacro:property name="tirewidth" value="0.06985"/>
     <!-- "track" is the distance between the drive wheels -->
-    <xacro:property name="track" value="0.53515"/>
+    <xacro:property name="track" value="0.51015"/>
 
     <xacro:property name="M_PI" value="3.1415926535897931"/>
     <xacro:property name="boschwidth" value="0.0381"/>
-    <xacro:property name="casterdrop" value="0.125"/>
-    <xacro:property name="frontdrop" value="${tirerad+0.02}"/>
+    <xacro:property name="casterdrop" value="0.05"/>
+    <xacro:property name="frontdrop" value="${tirerad+0.02-0.1}"/>
     <xacro:property name="bracketwidth" value="0.1175"/>
     <xacro:property name="bracketheight" value="0.16"/>
     <xacro:property name="bracketthick" value="0.0508"/>
@@ -41,6 +40,7 @@
         <inertia ixx="0.01" ixy="0.0" ixz="0.0" iyy="0.01" iyz="0.0" izz="0.01"/>
       </inertial>
     </xacro:macro>
+
     <xacro:macro name="wheel" params="prefix reflect">
       <link name="front_hoop_${prefix}">
         <visual>
@@ -55,7 +55,7 @@
           </geometry>
           <origin xyz="0 0 0" rpy="0 0 0"/>
         </collision>
-        <xacro:default_inertial mass="0.25"/>
+        <xacro:default_inertial mass="0.2"/>
       </link>
       <joint name="hoop2base_${prefix}" type="fixed">
         <parent link="base_link"/>
@@ -84,10 +84,11 @@
         <parent link="base_link"/>
         <child link="${prefix}_wheel"/>
         <origin xyz="0 ${reflect*track/2} ${tirerad}" rpy="0 ${M_PI/2} ${M_PI/2}"/>
-        <limit effort="100" velocity="15"/>
+        <limit effort="100" velocity="25"/>
         <joint_properties damping="0.0" friction="0.0"/>
       </joint>
     </xacro:macro>
+
     <xacro:macro name="caster" params="prefix reflect">
       <link name="castdrop_${prefix}">
         <visual>
@@ -122,7 +123,7 @@
           </geometry>
           <origin xyz="0 0 0" rpy="0 0 0"/>
         </collision>
-        <xacro:default_inertial mass="0.2"/>
+        <xacro:default_inertial mass="0.1"/>
       </link>
       <joint name="cast2bracket_${prefix}" type="continuous">
         <axis xyz="0 0 1"/>
@@ -144,7 +145,7 @@
           </geometry>
           <origin xyz="0 0 0" rpy="${M_PI/2} ${-bracketangle} ${M_PI/2}"/>
         </collision>
-        <xacro:default_inertial mass="0.2"/>
+        <xacro:default_inertial mass="0.05"/>
       </link>
       <joint name="brack2top1_${prefix}" type="fixed">
         <parent link="brackettop_${prefix}"/>
@@ -164,7 +165,7 @@
           </geometry>
           <origin xyz="0 0 0" rpy="${M_PI/2} ${-bracketangle} ${M_PI/2}"/>
         </collision>
-        <xacro:default_inertial mass="0.2"/>
+        <xacro:default_inertial mass="0.05"/>
       </link>
       <joint name="brack2top2_${prefix}" type="fixed">
         <parent link="brackettop_${prefix}"/>
@@ -183,14 +184,14 @@
           </geometry>
         </collision>
         <!-- accept default inertial properties for caster wheels-->
-        <xacro:default_inertial mass="0.5"/>
+        <xacro:default_inertial mass="0.3"/>
       </link>
       <joint name="${prefix}_caster_joint" type="continuous">
         <axis xyz="0 0 1"/>
         <parent link="bracketside1_${prefix}"/>
         <child link="${prefix}_casterwheel"/>
         <origin xyz="${-casterwidth/2-.02} .053 -.053" rpy="0 ${M_PI/2} 0"/>
-        <limit effort="100" velocity="15"/>
+        <limit effort="100" velocity="25"/>
         <joint_properties damping="0.0" friction="0.0"/>
       </joint>
     </xacro:macro>
@@ -208,11 +209,7 @@
         </geometry>
         <origin xyz="0 0 0" rpy="0 0 0"/>
       </collision>
-      <inertial>
-        <!--assign almost all the mass to the main body box; set m= 100kg; treat I as approx m*r^2 -->
-        <mass value="100"/>
-        <inertia ixx="10" ixy="0" ixz="0" iyy="10" iyz="0" izz="10"/>
-      </inertial>
+      <xacro:default_inertial mass="100"/>
     </link>
 
     <!-- Base link is the footprint of the robot -->
@@ -224,11 +221,11 @@
       <child link="robot_body"/>
     </joint>
 
-    <xacro:caster prefix="left" reflect="1"/>
-    <xacro:caster prefix="right" reflect="-1"/>
+    <!-- <xacro:caster prefix="left" reflect="1"/> -->
+    <!-- <xacro:caster prefix="right" reflect="-1"/> -->
     <xacro:wheel prefix="left" reflect="1"/>
     <xacro:wheel prefix="right" reflect="-1"/>
-
+    <xacro:caster prefix="rear" reflect="0"/>
     <gazebo reference="right_wheel">
       <mu1>100000.0</mu1>
       <mu2>100000.0</mu2>
@@ -240,23 +237,37 @@
       <material>Gazebo/Black</material>
     </gazebo>
 
-    <gazebo reference="right_casterwheel">
-      <mu1>100000.0</mu1>
-      <mu2>100000.0</mu2>
+    <gazebo reference="rear_casterwheel">
+      <mu1>1000.0</mu1>
+      <mu2>1000.0</mu2>
+      <material>Gazebo/Black</material>
+    </gazebo>
+    <gazebo>
+      <plugin name="joint_state_publisher" filename="libgazebo_ros_joint_state_publisher.so">
+        <jointName>rear_caster_joint</jointName>
+        <updateRate>60</updateRate>
+      </plugin>
+    </gazebo>
+<!-- 
+     <gazebo reference="right_casterwheel">
+      <mu1>1000.0</mu1>
+      <mu2>1000.0</mu2>
       <material>Gazebo/Black</material>
     </gazebo>
 
+
     <gazebo reference="left_casterwheel">
-      <mu1>100000.0</mu1>
-      <mu2>100000.0</mu2>
+      <mu1>1000.0</mu1>
+      <mu2>1000.0</mu2>
       <material>Gazebo/Black</material>
     </gazebo>
-    <!-- publish joint state for passive wheels -->
+    
     <gazebo>
       <plugin name="joint_state_publisher" filename="libgazebo_ros_joint_state_publisher.so">
         <jointName>cast2bracket_right, cast2bracket_left, right_caster_joint, left_caster_joint</jointName>
         <updateRate>60</updateRate>
       </plugin>
-    </gazebo>
+    </gazebo> -->
+    <!-- publish joint state for passive wheels -->
   </xacro:macro>
 </robot>
