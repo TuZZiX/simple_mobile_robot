@@ -6,18 +6,31 @@
 	</include>
 
 	<!-- Convert xacro model file and put on parameter server -->
-	<param name="robot_description" command="$(find xacro)/xacro.py '$(find simple_mobile_robot)/urdf/simple_mobile_robot.xacro'" />
+	<param name="robot_description" command="$(find xacro)/xacro.py --inorder '$(find simple_mobile_robot)/urdf/mobile_robot.xacro'" />
 
 	<!-- Spawn the robot from parameter server into Gazebo -->
-	<node name="spawn_urdf" pkg="gazebo_ros" type="spawn_model" args="-param robot_description -urdf -model mobot" />
+	<node name="spawn_urdf" pkg="gazebo_ros" type="spawn_model" args="-param robot_description -urdf -model mobile_robot" />
 	<!-- start a robot_state_publisher -->
 	<node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" />
 
 	<!-- launch rviz using a specific config file -->
-	<!-- <node pkg="rviz" type="rviz" name="rviz" args="-d $(find simple_mobile_robot)/rviz/amcl.rviz"/> -->
+	<node pkg="rviz" type="rviz" name="rviz" args="-d $(find simple_mobile_robot)/rviz/robot_w_map.rviz"/>
 
-	<node name= "map_server" pkg= "map_server" type= "map_server" args="$(find simple_mobile_robot)/map/pen.yaml" output="screen"/>
+	<node name="map_server" pkg= "map_server" type= "map_server" args="$(find simple_mobile_robot)/map/pen.yaml" output="screen"/>
 
 	<node pkg="amcl" type="amcl" name="amcl" output="screen"/>
+
+  <!-- Load controller configuration -->
+  <rosparam file="$(find simple_mobile_robot)/config/controller.yaml" command="load" />
+  <!-- Spawn controllers -->
+  <node name="base_controller_spawner" pkg="controller_manager" type="spawner"
+        args="joint_publisher velocity_controller" respawn="false" output="screen" />
+
+  <node pkg="interactive_marker_twist_server" type="marker_server" name="twist_marker_server" output="screen"/>
+
+  <node pkg="twist_mux" type="twist_mux" name="twist_mux">
+    <rosparam command="load" file="$(find simple_mobile_robot)/config/cmd_vel_mux.yaml" />
+    <remap from="cmd_vel_out" to="cmd_vel"/>
+  </node>
 
 </launch>

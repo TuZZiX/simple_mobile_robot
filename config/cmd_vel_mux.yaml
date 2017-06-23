@@ -1,0 +1,17 @@
+topics:
+-
+  name    : interactive_marker
+  topic   : twist_marker_server/cmd_vel
+  timeout : 0.5
+  priority: 10
+-
+  name    : keyboard
+  topic   : key_vel
+  timeout : 0.5
+  priority: 20
+locks:
+-
+  name    : pause
+  topic   : pause_navigation
+  timeout : 0.0
+  priority: 100
