@@ -230,25 +230,25 @@
     <xacro:wheel prefix="right" reflect="-1"/>
 
     <gazebo reference="right_wheel">
-      <mu1>10000000.0</mu1>
-      <mu2>10000000.0</mu2>
+      <mu1>100000.0</mu1>
+      <mu2>100000.0</mu2>
       <material>Gazebo/Black</material>
     </gazebo>
     <gazebo reference="left_wheel">
-      <mu1>10000000.0</mu1>
-      <mu2>10000000.0</mu2>
+      <mu1>100000.0</mu1>
+      <mu2>100000.0</mu2>
       <material>Gazebo/Black</material>
     </gazebo>
 
     <gazebo reference="right_casterwheel">
-      <mu1>10000000.0</mu1>
-      <mu2>10000000.0</mu2>
+      <mu1>100000.0</mu1>
+      <mu2>100000.0</mu2>
       <material>Gazebo/Black</material>
     </gazebo>
 
     <gazebo reference="left_casterwheel">
-      <mu1>10000000.0</mu1>
-      <mu2>10000000.0</mu2>
+      <mu1>100000.0</mu1>
+      <mu2>100000.0</mu2>
       <material>Gazebo/Black</material>
     </gazebo>
     <!-- publish joint state for passive wheels -->
