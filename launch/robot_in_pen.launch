@@ -45,9 +45,9 @@
 	<node pkg="simple_mobile_robot" type="delay_launcher.py" name="delay_launcher" args="5 $(arg move_type) $(arg length)" output="screen"/>
 
 	<!-- LIDAR brake when too close to the wall -->
-	<param name="MIN_SAFE_DISTANCE" value="0.8" />
+	<param name="MIN_SAFE_DISTANCE" value="0.6" />
 	<param name="ROBOT_RADIUS" value="0.4" />
-	<node if="$(arg lidar_estop)" pkg="simple_mobile_robot" type="laser_alarm" name="laser_alarm" output="screen"/>
+	<node if="$(arg lidar_estop)" pkg="simple_mobile_robot" type="lidar_brake" name="lidar_brake" output="screen"/>
 
 	<!-- mux cmd_vel from different source -->
 	<node pkg="twist_mux" type="twist_mux" name="twist_mux">

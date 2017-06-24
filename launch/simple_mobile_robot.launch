@@ -32,7 +32,7 @@
 
 	<!-- mux cmd_vel from different source -->
 	<node pkg="twist_mux" type="twist_mux" name="twist_mux">
-		<rosparam command="load" file="$(find simple_mobile_robot)/config/cmd_vel_mux.yaml" />
+		<rosparam command="load" file="$(find simple_mobile_robot)/config/cmd_vel_mux_no_lock.yaml" />
 		<remap from="cmd_vel_out" to="cmd_vel"/>
 	</node>
 

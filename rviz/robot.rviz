@@ -171,26 +171,27 @@ Visualization Manager:
       Show Axes: true
       Show Names: true
       Tree:
-        odom:
-          base_link:
-            castdrop_rear:
-              brackettop_rear:
-                bracketside1_rear:
-                  rear_casterwheel:
-                    {}
-                bracketside2_rear:
+        base_link:
+          castdrop_rear:
+            brackettop_rear:
+              bracketside1_rear:
+                rear_casterwheel:
                   {}
-            front_hoop_left:
-              {}
-            front_hoop_right:
-              {}
-            left_wheel:
-              {}
-            right_wheel:
-              {}
-            robot_body:
-              lidar_link:
+              bracketside2_rear:
                 {}
+          front_hoop_left:
+            {}
+          front_hoop_right:
+            {}
+          left_wheel:
+            {}
+          right_wheel:
+            {}
+          robot_body:
+            lidar_link:
+              {}
+        odom:
+          {}
       Update Interval: 0
       Value: true
     - Class: rviz/InteractiveMarkers
@@ -245,7 +246,7 @@ Visualization Manager:
   Enabled: true
   Global Options:
     Background Color: 48; 48; 48
-    Fixed Frame: base_link
+    Fixed Frame: odom
     Frame Rate: 30
   Name: root
   Tools:

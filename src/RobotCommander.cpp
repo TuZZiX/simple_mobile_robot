@@ -4,11 +4,11 @@
 
 #include <RobotCommander.h>
 
-RobotCommander::RobotCommander(ros::NodeHandle *nodehandle) : nh_(*nodehandle) {
+RobotCommander::RobotCommander(ros::NodeHandle &nodehandle, std::string topic) : nh_(nodehandle) {
     sample_dt = 0.001;
     speed = 1.0; // 1m/s speed command
     yaw_rate = 0.5; //0.5 rad/sec yaw rate command
-    twist_commander = nh_.advertise<geometry_msgs::Twist>("cmd_vel", 10);
+    twist_commander = nh_.advertise<geometry_msgs::Twist>(topic, 10);
 }
 
 void RobotCommander::stop() {

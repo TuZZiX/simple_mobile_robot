@@ -20,18 +20,13 @@ topics:
   timeout : 0.5
   priority: 20
 -
-  name    : lidar_brake
-  topic   : brake_vel
-  timeout : 0.5
-  priority: 120
--
   name    : external_source
   topic   : extra_vel
   timeout : 0.5
   priority: 25
 locks:
 -
-  name    : lidar_estop
-  topic   : lidar_alarm
-  timeout : 0.2
+  name    : fake_lock
+  topic   : fake_lock
+  timeout : 0.0
   priority: 100

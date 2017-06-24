@@ -8,6 +8,7 @@
 #include <ros/ros.h>
 #include <geometry_msgs/Twist.h>
 #include <cmath>
+#include <string>
 
 #define NONE        0
 #define FORWARD     1
@@ -25,7 +26,7 @@ private:
     double yaw_rate;
 
 public:
-    RobotCommander(ros::NodeHandle *nodehandle);
+    RobotCommander(ros::NodeHandle &nodehandle, std::string topic = "cmd_vel");
 
     void stop();
     // make a turn

@@ -8,7 +8,8 @@ import rospy
 
 def kill_process():
     global process
-    process.terminate()
+    if process:
+        process.terminate()
 
 def run_command(command):
     global process
@@ -29,7 +30,7 @@ def main():
         if args[i] == "keyboard":
             args[i] = "rosrun simple_mobile_robot keyboard_controller"
         elif args[i] == "none":
-            args[i] = ""
+            exit(0)
         elif args[i] == "square":
             args[i] = "rosrun simple_mobile_robot path_move"
         elif args[i] == "circle":
