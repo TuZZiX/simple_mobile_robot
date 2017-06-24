@@ -1,5 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <launch>
+	<arg name="move_type" default="none" doc="Select way to control the mobile robot,
+		options:
+		[none] - do nothing
+		[keyboard] - control the robot by WASD key
+		[square] - run a square path, specify the side length by extra argument [length], e.g. [length:=3.0]
+		[circle] - run a circular path, specify the diameter by extra argument [length], e.g. [length:=3.0]"/>
+	<arg name="length" default="3.0" doc="Length of the path when moving the robot in square or circle mode, see move_type definition for detail"/>
+	<arg name="amcl" default="true" doc="Load map and use AMCL for localization, empty argument have to be false"/>
+	<arg name="rviz" default="true" doc="Start rviz and interactive marker to control the robot"/>
+	<arg name="lidar_estop" default="true" doc="Start rviz and interactive marker to control the robot"/>
+
 	<!-- Start world with starting_pen -->
 	<include file="$(find gazebo_ros)/launch/empty_world.launch">
 		<arg name="world_name" value="$(find simple_mobile_robot)/worlds/robot_in_pen.world"/>
@@ -15,23 +26,33 @@
 	<node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" />
 
 	<!-- launch rviz using a specific config file -->
-	<node pkg="rviz" type="rviz" name="rviz" args="-d $(find simple_mobile_robot)/rviz/robot_w_map.rviz"/>
+	<node if="$(arg rviz)" pkg="rviz" type="rviz" name="rviz" args="-d $(find simple_mobile_robot)/rviz/robot_w_map.rviz"/>
 
-	<node name="map_server" pkg= "map_server" type= "map_server" args="$(find simple_mobile_robot)/map/pen.yaml" output="screen"/>
+	<!-- interactive marker -->
+	<node if="$(arg rviz)" pkg="interactive_marker_twist_server" type="marker_server" name="twist_marker_server" output="screen"/>
 
-	<node pkg="amcl" type="amcl" name="amcl" output="screen"/>
+	<!-- amcl and map server -->
+	<node if="$(arg amcl)" name="map_server" pkg= "map_server" type= "map_server" args="$(find simple_mobile_robot)/map/pen.yaml" output="screen"/>
 
-  <!-- Spawn controllers -->
-  <!-- <rosparam file="$(find simple_mobile_robot)/config/controller.yaml" command="load" /> -->
-  <!-- <node name="joint_publisher_spawner" pkg="controller_manager" type="spawner" args="joint_publisher" respawn="false" output="screen" /> -->
+	<node if="$(arg amcl)" pkg="amcl" type="amcl" name="amcl" output="screen"/>
+
+	<!-- Spawn controllers -->
+	<!-- <rosparam file="$(find simple_mobile_robot)/config/controller.yaml" command="load" /> -->
+	<!-- <node name="joint_publisher_spawner" pkg="controller_manager" type="spawner" args="joint_publisher" respawn="false" output="screen" /> -->
 	<!-- <node name="velocity_controller_spawner" pkg="controller_manager" type="spawner" args="velocity_controller" respawn="false" output="screen" /> -->
 
-  <!-- interactive marker -->
-  <node pkg="interactive_marker_twist_server" type="marker_server" name="twist_marker_server" output="screen"/>
+	<!-- load control node after 5 secs for gazebo to finish loading-->
+	<node pkg="simple_mobile_robot" type="delay_launcher.py" name="delay_launcher" args="5 $(arg move_type) $(arg length)" output="screen"/>
 
-  <node pkg="twist_mux" type="twist_mux" name="twist_mux">
-    <rosparam command="load" file="$(find simple_mobile_robot)/config/cmd_vel_mux.yaml" />
-    <remap from="cmd_vel_out" to="cmd_vel"/>
-  </node>
+	<!-- LIDAR brake when too close to the wall -->
+	<param name="MIN_SAFE_DISTANCE" value="0.8" />
+	<param name="ROBOT_RADIUS" value="0.4" />
+	<node if="$(arg lidar_estop)" pkg="simple_mobile_robot" type="laser_alarm" name="laser_alarm" output="screen"/>
+
+	<!-- mux cmd_vel from different source -->
+	<node pkg="twist_mux" type="twist_mux" name="twist_mux">
+		<rosparam command="load" file="$(find simple_mobile_robot)/config/cmd_vel_mux.yaml" />
+		<remap from="cmd_vel_out" to="cmd_vel"/>
+	</node>
 
 </launch>
