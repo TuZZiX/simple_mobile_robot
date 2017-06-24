@@ -57,7 +57,7 @@ void laserCallback(const sensor_msgs::LaserScan& laser_scan) {
 			} else {
 				laser_alarm_r = true;
 			}
-			ROS_WARN("Detected an object in %0.2f meters in front of me.", r);
+			ROS_WARN_THROTTLE(0.25, "Detected an object in %0.2f meters in front of me.", r);
 			break; //no need to keep looking
 		}
 	}
