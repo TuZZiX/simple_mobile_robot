@@ -7,6 +7,7 @@
 
 #include <ros/ros.h>
 #include <geometry_msgs/Twist.h>
+#include <nav_msgs/Odometry.h>
 #include <cmath>
 #include <string>
 
@@ -18,21 +19,14 @@
 
 
 class RobotCommander {
-private:
-    ros::NodeHandle nh_;
-    ros::Publisher twist_commander;
-    double sample_dt;
-    double speed;
-    double yaw_rate;
-
 public:
     RobotCommander(ros::NodeHandle &nodehandle, std::string topic = "cmd_vel");
-
+    // stop the r
     void stop();
-    // make a turn
-    void turn(double rad);
     // keep spinning to one direction without stop
     void spin(int direction);
+    // make a turn
+    void turn(double rad);
     // move forward for backward with distance in m
     void move(int direction, double distance);
     // same as move, negative means backward
@@ -45,6 +39,14 @@ public:
     void setSpeed(double speed) { this->speed = speed; }
 
     void setYawRate(double yaw_rate) { this->yaw_rate = yaw_rate; }
+
+private:
+    ros::NodeHandle nh;
+    ros::Publisher twist_commander;
+    ros::Timer controlUpdater;
+    double sample_dt;
+    double speed;
+    double yaw_rate;
 };
 
 #endif //MOBOT_GENERAL_H

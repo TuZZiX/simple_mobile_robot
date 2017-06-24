@@ -13,12 +13,13 @@ double MAX_SPIN_RATE = 0.8; // max spinning rate in rad/s
 double MAX_ACC = 3.0;       // max acceleration on speed in m/s^2 to start and stop
 double MAX_SPIN_ACC = 2.4;  // max acceleration on spinning rate in rad/s^2
 double ACC_JERK = 10.0;     // max acceleration jerk for both MAX_ACC and MAX_SPIN_ACC in m/s^3 or rad/s^3
-double UPDATE_SPEED = 0.01; // speed calculation and twist publishing interval, in second
+double UPDATE_RATE = 100;   // speed calculation and twist publishing frequency, in hz
 double KEY_TIMEOUT = 0.4;   // continue moving for a short period after key released, also to prevent key jitter, in second
 double STOP_DEACC = 1.5;    // when key released, instead of using max acceleration, use a slower deceleration to simulate inertia
 
-// the final stop time from the time that key released would be KEY_TIMEOUT + current_speed/STOP_DEACC
+// the final stop time from the time that key released would be KEY_TIMEOUT + current_speed / STOP_DEACC
 
+double dt;
 double current_speed = 0;
 double current_spin_rate = 0;
 double current_acc = 0;
@@ -63,35 +64,35 @@ void updateCallback(const ros::TimerEvent &event) {
     // calculate speed and acc, using acc jerk
     if (spin_dir == LEFT) {
         if (current_spin_acc < MAX_SPIN_ACC) {
-            current_spin_acc += ACC_JERK * UPDATE_SPEED;
+            current_spin_acc += ACC_JERK * dt;
         } else {
             current_spin_acc = MAX_SPIN_ACC;
         }
         if (current_spin_rate < MAX_SPIN_RATE) {
-            current_spin_rate += current_spin_acc * UPDATE_SPEED;
+            current_spin_rate += current_spin_acc * dt;
         } else {
             current_spin_rate = MAX_SPIN_RATE;
         }
     } else if (spin_dir == RIGHT) {
         if (current_spin_acc > -MAX_SPIN_ACC) {
-            current_spin_acc += -1 * ACC_JERK * UPDATE_SPEED;
+            current_spin_acc += -1 * ACC_JERK * dt;
         } else {
             current_spin_acc = -MAX_SPIN_ACC;
         }
         if (current_spin_rate > -MAX_SPIN_RATE) {
-            current_spin_rate += current_spin_acc * UPDATE_SPEED;
+            current_spin_rate += current_spin_acc * dt;
         } else {
             current_spin_rate = -MAX_SPIN_RATE;
         }
     } else if (spin_dir == NONE) {
-        // use stop deceleration, no jerk
+        // use stop deceleration, infinite jerk
         current_spin_acc = 0;
-        if (current_spin_rate > STOP_DEACC * UPDATE_SPEED) {
-            current_spin_rate -= STOP_DEACC * UPDATE_SPEED;
+        if (current_spin_rate > STOP_DEACC * dt) {
+            current_spin_rate -= STOP_DEACC * dt;
         } else if (current_spin_rate > 0) {
             current_spin_rate = 0;
-        } else if (current_spin_rate < -STOP_DEACC * UPDATE_SPEED) {
-            current_spin_rate -= -STOP_DEACC * UPDATE_SPEED;
+        } else if (current_spin_rate < -STOP_DEACC * dt) {
+            current_spin_rate -= -STOP_DEACC * dt;
         } else {
             current_spin_rate = 0;
         }
@@ -99,35 +100,35 @@ void updateCallback(const ros::TimerEvent &event) {
     // same for forward
     if (move_dir == FORWARD) {
         if (current_acc < MAX_ACC) {
-            current_acc += ACC_JERK * UPDATE_SPEED;
+            current_acc += ACC_JERK * dt;
         } else {
             current_acc = MAX_ACC;
         }
         if (current_speed < MAX_SPEED) {
-            current_speed += current_acc * UPDATE_SPEED;
+            current_speed += current_acc * dt;
         } else {
             current_speed = MAX_SPEED;
         }
     } else if (move_dir == BACKWARD) {
         if (current_acc > -MAX_ACC) {
-            current_acc += -ACC_JERK * UPDATE_SPEED;
+            current_acc += -ACC_JERK * dt;
         } else {
             current_acc = -MAX_ACC;
         }
         if (current_speed > -MAX_SPEED) {
-            current_speed += current_acc * UPDATE_SPEED;
+            current_speed += current_acc * dt;
         } else {
             current_speed = -MAX_SPEED;
         }
     } else if (move_dir == NONE) {
-        // use stop deceleration, no jerk
+        // use stop deceleration, infinite jerk
         current_acc = 0;
-        if (current_speed > STOP_DEACC * UPDATE_SPEED) {
-            current_speed -= STOP_DEACC * UPDATE_SPEED;
+        if (current_speed > STOP_DEACC * dt) {
+            current_speed -= STOP_DEACC * dt;
         } else if (current_speed > 0) {
             current_speed = 0;
-        } else if (current_speed < -STOP_DEACC * UPDATE_SPEED) {
-            current_speed -= -STOP_DEACC * UPDATE_SPEED;
+        } else if (current_speed < -STOP_DEACC * dt) {
+            current_speed -= -STOP_DEACC * dt;
         } else {
             current_speed = 0;
         }
@@ -157,10 +158,11 @@ int main(int argc, char **argv) {
     nh.param("MAX_ACC", MAX_ACC, MAX_ACC);
     nh.param("MAX_SPIN_ACC", MAX_SPIN_ACC, MAX_SPIN_ACC);
     nh.param("ACC_JERK", ACC_JERK, ACC_JERK);
-    nh.param("UPDATE_SPEED", UPDATE_SPEED, UPDATE_SPEED);
+    nh.param("UPDATE_RATE", UPDATE_RATE, UPDATE_RATE);
     nh.param("KEY_TIMEOUT", KEY_TIMEOUT, KEY_TIMEOUT);
     nh.param("STOP_DEACC", STOP_DEACC, STOP_DEACC);
-    ros::Timer update_timer = nh.createTimer(ros::Duration(UPDATE_SPEED), updateCallback);
+    dt = 1 / UPDATE_RATE;
+    ros::Timer update_timer = nh.createTimer(ros::Duration(dt), updateCallback);
     twist_commander = nh.advertise<geometry_msgs::Twist>("key_vel", 10);
     ros::AsyncSpinner spinner(1); // for timer callback to execute
     spinner.start();

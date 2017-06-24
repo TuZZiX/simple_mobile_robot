@@ -4,11 +4,11 @@
 
 #include <RobotCommander.h>
 
-RobotCommander::RobotCommander(ros::NodeHandle &nodehandle, std::string topic) : nh_(nodehandle) {
-    sample_dt = 0.001;
+RobotCommander::RobotCommander(ros::NodeHandle &nodehandle, std::string topic) : nh(nodehandle) {
+    sample_dt = 0.01;
     speed = 1.0; // 1m/s speed command
     yaw_rate = 0.5; //0.5 rad/sec yaw rate command
-    twist_commander = nh_.advertise<geometry_msgs::Twist>(topic, 10);
+    twist_commander = nh.advertise<geometry_msgs::Twist>(topic, 10);
 }
 
 void RobotCommander::stop() {
@@ -21,9 +21,7 @@ void RobotCommander::turn(double rad) {
     double timer = 0.0;
     ros::Rate loop_timer(1 / sample_dt);
     geometry_msgs::Twist twist_cmd;
-    if (rad == 0) {
-
-    } else if (rad > 0.0) {
+    if (rad > 0.0) {
         twist_cmd.angular.z = yaw_rate;
     } else if (rad < 0.0) {
         twist_cmd.angular.z = -1.0 * yaw_rate;
@@ -55,11 +53,11 @@ void RobotCommander::spin(int direction) {
     twist_commander.publish(twist_cmd);
 }
 
-void RobotCommander::move(int direction, double time) {
+void RobotCommander::move(int direction, double distance) {
     double timer = 0.0;
     ros::Rate loop_timer(1 / sample_dt);
     geometry_msgs::Twist twist_cmd;
-    time = fabs(time);
+    double time = fabs(distance) / speed;
     switch (direction) {
         case NONE:
             break;
@@ -81,16 +79,15 @@ void RobotCommander::move(int direction, double time) {
     stop();
 }
 
-void RobotCommander::move(double time) {
-    if (time >= 0) {
-        move(FORWARD, time);
+void RobotCommander::move(double distance) {
+    if (distance >= 0) {
+        move(FORWARD, distance);
     } else {
-        move(BACKWARD, -1 * time);
+        move(BACKWARD, -1 * distance);
     }
 }
 
 void RobotCommander::go(int direction) {
-    ros::Rate loop_timer(1 / sample_dt);
     geometry_msgs::Twist twist_cmd;
     switch (direction) {
         case NONE:
@@ -109,10 +106,10 @@ void RobotCommander::go(int direction) {
 
 //a function to consider periodicity and find min delta angle
 double RobotCommander::minSpin(double spin_angle) {
-    if (spin_angle >= M_PI) {
+    while (spin_angle >= M_PI) {
         spin_angle -= 2.0 * M_PI;
     }
-    if (spin_angle < -M_PI) {
+    while (spin_angle < -M_PI) {
         spin_angle += 2.0 * M_PI;
     }
     return spin_angle;
