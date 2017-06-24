@@ -16,7 +16,7 @@ topics:
   priority: 30
 locks:
 -
-  name    : pause
-  topic   : pause_navigation
-  timeout : 0.0
+  name    : lidar_estop
+  topic   : lidar_alarm
+  timeout : 0.2
   priority: 100

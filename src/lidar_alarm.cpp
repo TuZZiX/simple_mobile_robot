@@ -4,7 +4,7 @@
 
 /** Set alarm if anything is within 0.5m of the front of robot, or too
     close to the sides. */
-double MIN_SAFE_DISTANCE = 1.0;
+double MIN_SAFE_DISTANCE = 0.8;
 double ROBOT_RADIUS = 0.5;
 
 /** these values to be set within the laser callback */
@@ -72,18 +72,10 @@ void laserCallback(const sensor_msgs::LaserScan& laser_scan) {
 }
 
 int main(int argc, char **argv) {
-	if (argc < 3) {
-		printf("Wrong number of arguments.  Using default values.\n"
-			"Usage: lidar_alarm DIST RAD\n"
-			"  DIST distance in front of robot to check\n"
-			"  RAD  radius of robot\n"
-		);
-	} else {
-		MIN_SAFE_DISTANCE = atof(argv[1]);
-		ROBOT_RADIUS = atof(argv[2]);
-	}
 	ros::init(argc, argv, "lidar_alarm"); //name this node
 	ros::NodeHandle nh;
+    nh.param("MIN_SAFE_DISTANCE", MIN_SAFE_DISTANCE, MIN_SAFE_DISTANCE);
+    nh.param("ROBOT_RADIUS", ROBOT_RADIUS, ROBOT_RADIUS);
     //create a Subscriber object and have it subscribe to the
     //lidar topic (made global so callback can use it)
     lidar_alarm_publisher_ = nh.advertise<std_msgs::Bool>("/lidar_alarm", 10);

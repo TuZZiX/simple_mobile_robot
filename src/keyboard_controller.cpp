@@ -8,33 +8,33 @@
 #include <fcntl.h>
 #include <RobotCommander.h>
 
-double MAX_SPEED = 1.0;
-double MAX_SPIN_RATE = 0.8;
-double MAX_ACC = 3.0;
-double MAX_SPIN_ACC = 2.4;
-double ACC_JERK = 10.0;
-double UPDATE_SPEED = 0.01;
-double KEY_TIMEOUT = 0.4;
-double STOP_DEACC = 1.5;
+double MAX_SPEED = 1.0;     // max speed in m/s
+double MAX_SPIN_RATE = 0.8; // max spinning rate in rad/s
+double MAX_ACC = 3.0;       // max acceleration on speed in m/s^2 to start and stop
+double MAX_SPIN_ACC = 2.4;  // max acceleration on spinning rate in rad/s^2
+double ACC_JERK = 10.0;     // max acceleration jerk for both MAX_ACC and MAX_SPIN_ACC in m/s^3 or rad/s^3
+double UPDATE_SPEED = 0.01; // speed calculation and twist publishing interval, in second
+double KEY_TIMEOUT = 0.4;   // continue moving for a short period after key released, also to prevent key jitter, in second
+double STOP_DEACC = 1.5;    // when key released, instead of using max acceleration, use a slower deceleration to simulate inertia
+
+// the final stop time from the time that key released would be KEY_TIMEOUT + current_speed/STOP_DEACC
 
 double current_speed = 0;
 double current_spin_rate = 0;
 double current_acc = 0;
 double current_spin_acc = 0;
-int spin_dir;
-int move_dir;
-bool brake = false;
+int spin_dir;   // LEFT or RIGHT or NONE
+int move_dir;   // FORWARD or BACKWARD or NONE
+bool brake = false;     // stop as fast as you can
 
 ros::Publisher twist_commander;
 
-// goto xy and kbhit in Linux
-void gotoxy(int x,int y)
-{
-    printf("%c[%d;%df",0x1B,y,x);
+// gotoxy and kbhit for Linux
+void gotoxy(int x, int y) {
+    printf("%c[%d;%df", 0x1B, y, x);
 }
 
-int kbhit(void)
-{
+int kbhit(void) {
     struct termios oldt, newt;
     int ch;
     int oldf;
@@ -51,8 +51,7 @@ int kbhit(void)
     tcsetattr(STDIN_FILENO, TCSANOW, &oldt);
     fcntl(STDIN_FILENO, F_SETFL, oldf);
 
-    if(ch != EOF)
-    {
+    if (ch != EOF) {
         ungetc(ch, stdin);
         return 1;
     }
@@ -166,56 +165,62 @@ int main(int argc, char **argv) {
     ros::AsyncSpinner spinner(1); // for timer callback to execute
     spinner.start();
     std::system("clear");
-    std::cout   << "=============Simple keyboard teleop program=============" << std::endl
-                << "Control the mobile robot with WASD just like in need4speed" << std::endl
-                << "Use param server to set parameters like speed, acceleration, jerk, etc." << std::endl
-                << std::endl
-                << "         ↑" << std::endl
-                << "         W " << std::endl
-                << "      ←A S D→" << std::endl
-                << "         ↓  " << std::endl
-                << std::endl
-                << "  Q = Quit, E = Brake" << std::endl
-                << std::endl
-                << "Status: " << std::endl;
+    std::cout << "=============Simple keyboard teleop program=============" << std::endl
+              << "Control the mobile robot with WASD just like in need4speed" << std::endl
+              << "Use param server to set parameters like speed, acceleration, jerk, etc." << std::endl
+              << std::endl
+              << "         ↑" << std::endl
+              << "         W " << std::endl
+              << "      ←A S D→" << std::endl
+              << "         ↓  " << std::endl
+              << std::endl
+              << "  Q = Quit, E = Brake" << std::endl
+              << std::endl
+              << "Status: " << std::endl;
     auto move_time = ros::Time::now();
     auto spin_time = ros::Time::now();
     while (ros::ok()) {
         if (kbhit()) {
             int key = getchar();
             switch (key) {
-                case 'A': case 'a':
+                case 'A':
+                case 'a':
                     gotoxy(9, 12);
                     std::cout << "Go left!              " << std::endl;
                     spin_dir = LEFT;
                     spin_time = ros::Time::now();
                     break;
-                case 'S': case 's':
+                case 'S':
+                case 's':
                     gotoxy(9, 12);
                     std::cout << "Go back!              " << std::endl;
                     move_dir = BACKWARD;
                     move_time = ros::Time::now();
                     break;
-                case 'D': case 'd':
+                case 'D':
+                case 'd':
                     gotoxy(9, 12);
                     std::cout << "Go right!              " << std::endl;
                     spin_dir = RIGHT;
                     spin_time = ros::Time::now();
                     break;
-                case 'W': case 'w':
+                case 'W':
+                case 'w':
                     gotoxy(9, 12);
                     std::cout << "Go ahead!              " << std::endl;
                     move_dir = FORWARD;
                     move_time = ros::Time::now();
                     break;
-                case 'E': case 'e':
+                case 'E':
+                case 'e':
                     brake = true;
                     gotoxy(9, 12);
                     std::cout << "Brake!              " << std::endl;
                     move_dir = NONE;
                     spin_dir = NONE;
                     break;
-                case 'Q': case 'q':
+                case 'Q':
+                case 'q':
                     gotoxy(9, 12);
                     std::cout << "Quit!              " << std::endl;
                     return 0;
