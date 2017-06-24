@@ -34,7 +34,7 @@ def main():
         elif args[i] == "square":
             args[i] = "rosrun simple_mobile_robot path_move"
         elif args[i] == "circle":
-            args[i] = "rosrun simple_mobile_robot path_move"
+            args[i] = "rosrun simple_mobile_robot circle_move"
         elif '__' in args[i]:
             args[i] = ""
 

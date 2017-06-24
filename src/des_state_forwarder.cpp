@@ -13,9 +13,9 @@ void desStateCallback(const nav_msgs::Odometry &des_state) {
 
 int main(int argc, char **argv) {
     ros::init(argc, argv, "des_state_forwarder");
-    ros::NodeHandle n; // two lines to create a publisher object that can talk to ROS
-    republisher = n.advertise<geometry_msgs::Twist>("/path_vel", 10);
-    ros::Subscriber des_state_subscriber = n.subscribe("/des_state", 10, desStateCallback);
+    ros::NodeHandle nh; // two lines to create a publisher object that can talk to ROS
+    republisher = nh.advertise<geometry_msgs::Twist>("/path_vel", 10);
+    ros::Subscriber des_state_subscriber = nh.subscribe("/des_state", 10, desStateCallback);
     ros::spin();
 }
 

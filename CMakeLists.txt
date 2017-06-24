@@ -31,6 +31,7 @@ cs_add_library(TrajBuilder src/TrajBuilder.cpp)
 # Executables: uncomment the following and edit arguments to compile new nodes
 # may add more of these lines for more nodes from the same package
 cs_add_executable(path_move src/path_move.cpp)
+cs_add_executable(circle_move src/circle_move.cpp)
 cs_add_executable(lidar_brake src/lidar_brake.cpp)
 cs_add_executable(keyboard_controller src/keyboard_controller.cpp)
 cs_add_executable(steering_controller src/steering_controller.cpp)
