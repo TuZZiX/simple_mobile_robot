@@ -153,7 +153,7 @@ MAX_SPIN_RATE: 0.8  # max spinning rate in rad/s
 UPDATE_RATE: 100    # control loop running frequency, in hz
 ```
 
-**Notice: ** If you want to use other teleop package, you need to remap /cmd_vel to /extra_vel to avoid conflict with other command velocity source.
+**Notice:** If you want to use other teleop package, you need to remap /cmd_vel to /extra_vel to avoid conflict with other command velocity source.
 
 For demo video, see demo for launch files.
 
@@ -223,7 +223,7 @@ Example: `rosrun simple_mobile_robot delay_launcher.py 2 ls -l`, this will run `
 
 ## Experimental
 
-Do not use them as they are still under construction.
+**Do not use them as they are still under construction!**
 
 ### Trajectory Builder
 
