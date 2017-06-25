@@ -62,9 +62,9 @@ public:
 
     void setMaxSpinRate(double max_spin_rate) { this->max_spin_rate = max_spin_rate; }
 
-    void setSpin_acc(double spin_acc) { this->spin_acc = spin_acc; }
+    void setSpinAcc(double spin_acc) { this->spin_acc = spin_acc; }
 
-    void setSpeed_acc(double speed_acc) { this->speed_acc = speed_acc; }
+    void setSpeedAcc(double speed_acc) { this->speed_acc = speed_acc; }
 
 private:
     ros::NodeHandle nh;

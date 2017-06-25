@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <launch>
-	<arg name="move_type" default="none" doc="Select way to control the mobile robot,
+	<arg name="move" default="none" doc="Select way to control the mobile robot,
 		options:
 		[none] - do nothing
 		[keyboard] - control the robot by WASD key
 		[square] - run a square path, specify the side length by extra argument [length], e.g. [length:=3.0]
 		[circle] - run a circular path, specify the diameter by extra argument [length], e.g. [length:=3.0]"/>
-	<arg name="length" default="3.0" doc="Length of the path when moving the robot in square or circle mode, see move_type definition for detail"/>
+	<arg name="length" default="3.0" doc="Length of the path when moving the robot in square or circle mode, see [move] definition for detail"/>
 	<arg name="rviz" default="true" doc="Start rviz and interactive marker to control the robot"/>
 
 	<!-- load paramters from yaml file -->
 	<rosparam command="load" file="$(find simple_mobile_robot)/config/parameters.yaml" />
-	
+
 	<!-- Start world with starting_pen -->
 	<include file="$(find gazebo_ros)/launch/empty_world.launch" />
 
@@ -31,7 +31,7 @@
 	<node if="$(arg rviz)" pkg="interactive_marker_twist_server" type="marker_server" name="twist_marker_server" output="screen"/>
 
 	<!-- load control node after 5 secs for gazebo to finish loading-->
-	<node pkg="simple_mobile_robot" type="delay_launcher.py" name="delay_launcher" args="5 $(arg move_type) $(arg length)" output="screen"/>
+	<node pkg="simple_mobile_robot" type="delay_launcher.py" name="delay_launcher" args="5 $(arg move) $(arg length)" output="screen"/>
 
 	<!-- mux cmd_vel from different source -->
 	<node pkg="twist_mux" type="twist_mux" name="twist_mux">

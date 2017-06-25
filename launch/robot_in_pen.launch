@@ -7,7 +7,7 @@
 		[square] - run a square path, specify the side length by extra argument [length], e.g. [length:=3.0]
 		[circle] - run a circular path, specify the diameter by extra argument [length], e.g. [length:=3.0]"/>
 	<arg name="length" default="3.0" doc="Length of the path when moving the robot in square or circle mode, see argument [move] definition for detail"/>
-	<arg name="amcl" default="true" doc="Load map and use AMCL for localization, empty argument have to be false"/>
+	<arg name="amcl" default="true" doc="Load map and start AMCL for localization, for now, this is only for make the view in rviz looks better."/>
 	<arg name="rviz" default="true" doc="Start rviz and interactive marker to control the robot"/>
 	<arg name="lidar" default="true" doc="Start lidar estop node to prevent robot from hitting anything"/>
 
