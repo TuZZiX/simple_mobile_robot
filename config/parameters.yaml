@@ -1,14 +1,14 @@
 # lidar brake
 MIN_SAFE_DISTANCE: 0.65
 ROBOT_WIDTH: 0.5
-# general
-MAX_SPEED: 1.0
-MAX_SPIN_RATE: 0.8
-UPDATE_RATE: 100
+# keyboard teleop
+KEY_TIMEOUT: 0.4
+STOP_DEACC: 1.5
 # dynamics
 MAX_ACC: 3.0
 MAX_SPIN_ACC: 2.4
 ACC_JERK: 10.0
-# keyboard teleop
-KEY_TIMEOUT: 0.4
-STOP_DEACC: 1.5
+# general
+MAX_SPEED: 1.0
+MAX_SPIN_RATE: 0.8
+UPDATE_RATE: 100
