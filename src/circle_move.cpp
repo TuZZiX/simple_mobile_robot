@@ -28,15 +28,10 @@ int main(int argc, char **argv) {
     twist.linear.x = speed;
     twist.angular.z = speed / radius; // w = v/r
     ROS_INFO("start circular move with speed = %f, diameter = %f", speed, diameter);
-    int counter = 0;
-    int loop = (int) ((((M_PI) / 0.02) / speed) * diameter);
+
     while (ros::ok()) {
-        if (counter % loop == 0) {
-            ROS_INFO("Loop %d", (counter / loop) + 1);  // count from 1, more friendly
-        }
         twist_publisher.publish(twist);
         ros::Duration(0.02).sleep();
-        counter++;
     }
     return 0;
 };
