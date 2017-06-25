@@ -17,9 +17,10 @@ int main(int argc, char **argv) {
     } else {
         std::cout << "Wrong number of parameters! Use default parameter diameter = " << diameter << std::endl
                   << "Usage: rosrun simple_mobile_robot circle_move [diameter]" << std::endl
-                  << "      [diameter] is the diameter of the circular path in meter, if you want the robot to move counter clockwise, specify a negative number" << std::endl
-                  << "Example: rosrun simple_mobile_robot circle_move 5 # run a clockwise circular path of diameter = 5" << std::endl;
-        return 0;
+                  << "      [diameter] is the diameter of the circular path in meter, if you want the robot to move counter clockwise, specify a negative number"
+                  << std::endl
+                  << "Example: rosrun simple_mobile_robot circle_move 5 # run a clockwise circular path of diameter = 5"
+                  << std::endl;
     }
     nh.param("MAX_SPEED", speed, speed); // get speed from param server
     double radius = (diameter / 2) * 1.1; // a small compensation
@@ -28,9 +29,15 @@ int main(int argc, char **argv) {
     twist.linear.x = speed;
     twist.angular.z = speed / radius; // w = v/r
     ROS_INFO("start circular move with speed = %f, diameter = %f", speed, diameter);
+    int counter = 0;
+    int loop = (int) ((((M_PI) / 0.02) / speed) * diameter);
     while (ros::ok()) {
+        if (counter % loop == 0) {
+            ROS_INFO("Loop %d", (counter / loop) + 1);  // count from 1, more friendly
+        }
         twist_publisher.publish(twist);
-        ros::Duration(0.05).sleep();
+        ros::Duration(0.02).sleep();
+        counter++;
     }
     return 0;
 };

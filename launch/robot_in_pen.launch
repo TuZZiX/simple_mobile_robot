@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <launch>
-	<arg name="move_type" default="none" doc="Select way to control the mobile robot,
+	<arg name="move" default="none" doc="Select way to control the mobile robot,
 		options:
 		[none] - do nothing
 		[keyboard] - control the robot by WASD key
 		[square] - run a square path, specify the side length by extra argument [length], e.g. [length:=3.0]
 		[circle] - run a circular path, specify the diameter by extra argument [length], e.g. [length:=3.0]"/>
-	<arg name="length" default="3.0" doc="Length of the path when moving the robot in square or circle mode, see move_type definition for detail"/>
+	<arg name="length" default="3.0" doc="Length of the path when moving the robot in square or circle mode, see argument [move] definition for detail"/>
 	<arg name="amcl" default="true" doc="Load map and use AMCL for localization, empty argument have to be false"/>
 	<arg name="rviz" default="true" doc="Start rviz and interactive marker to control the robot"/>
-	<arg name="lidar_estop" default="true" doc="Start rviz and interactive marker to control the robot"/>
+	<arg name="lidar" default="true" doc="Start lidar estop node to prevent robot from hitting anything"/>
 
 	<!-- load paramters from yaml file -->
 	<rosparam command="load" file="$(find simple_mobile_robot)/config/parameters.yaml" />
@@ -46,10 +46,10 @@
 	<!-- <node name="velocity_controller_spawner" pkg="controller_manager" type="spawner" args="velocity_controller" respawn="false" output="screen" /> -->
 
 	<!-- load control node after 5 secs for gazebo to finish loading-->
-	<node pkg="simple_mobile_robot" type="delay_launcher.py" name="delay_launcher" args="5 $(arg move_type) $(arg length)" output="screen"/>
+	<node pkg="simple_mobile_robot" type="delay_launcher.py" name="delay_launcher" args="5 $(arg move) $(arg length)" output="screen"/>
 
 	<!-- LIDAR brake when too close to the wall -->
-	<node if="$(arg lidar_estop)" pkg="simple_mobile_robot" type="lidar_estop" name="lidar_estop" output="screen"/>
+	<node if="$(arg lidar)" pkg="simple_mobile_robot" type="lidar_estop" name="lidar_estop" output="screen"/>
 
 	<!-- mux cmd_vel from different source -->
 	<node pkg="twist_mux" type="twist_mux" name="twist_mux">

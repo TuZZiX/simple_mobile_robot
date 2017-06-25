@@ -9,6 +9,9 @@
 	<arg name="length" default="3.0" doc="Length of the path when moving the robot in square or circle mode, see move_type definition for detail"/>
 	<arg name="rviz" default="true" doc="Start rviz and interactive marker to control the robot"/>
 
+	<!-- load paramters from yaml file -->
+	<rosparam command="load" file="$(find simple_mobile_robot)/config/parameters.yaml" />
+	
 	<!-- Start world with starting_pen -->
 	<include file="$(find gazebo_ros)/launch/empty_world.launch" />
 
