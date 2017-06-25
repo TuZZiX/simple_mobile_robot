@@ -23,11 +23,13 @@ void BetterRobotCommander::stop() {
 }
 
 void BetterRobotCommander::go(int direction) {
+    current_distance = 0;
     move_dir = direction;
     target_distance = INFINITY;
 }
 
 void BetterRobotCommander::move(double distance) {
+    current_distance = 0;
     if (distance >= 0) {
         move_dir = FORWARD;
     } else {
@@ -37,11 +39,13 @@ void BetterRobotCommander::move(double distance) {
 }
 
 void BetterRobotCommander::spin(int direction) {
+    current_spin = 0;
     spin_dir = direction;
     target_spin = INFINITY;
 }
 
 void BetterRobotCommander::turn(double rad) {
+    current_spin = 0;
     if (rad > 0.0) {
         spin_dir = LEFT;
     } else if (rad < 0.0) {
@@ -114,8 +118,10 @@ void BetterRobotCommander::updateCallback(const ros::TimerEvent &event) {
     twist.angular.z = current_spin_rate;
     twist.linear.x = current_speed;
     twist_commander.publish(twist);
-    if (finished()) {
+    if (spin_dir == NONE && current_spin_rate == 0) {
         current_spin = 0;
+    }
+    if (move_dir == NONE && current_speed == 0) {
         current_distance = 0;
     }
 }

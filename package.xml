@@ -29,11 +29,10 @@
     <run_depend>xacro</run_depend>
     <run_depend>gazebo_ros</run_depend>
     <run_depend>gazebo_ros_control</run_depend>
-    <run_depend>ros_controllers</run_depend>
-    <run_depend>controller_manager</run_depend>
+    <!-- <run_depend>ros_controllers</run_depend>
+    <run_depend>controller_manager</run_depend> -->
     <run_depend>twist_mux</run_depend>
     <run_depend>interactive_marker_twist_server</run_depend>
-    <run_depend>joint_state_publisher</run_depend>
     <run_depend>robot_state_publisher</run_depend>
 
     <export></export>
