@@ -37,14 +37,6 @@ private:
 
     ros::Publisher cmd_publisher_; // sends twist commands to cmd_vel topic
     ros::Duration sleep_timer;
-    geometry_msgs::Twist twist_cmd_;
-
-    // variables used in the NL steering algorithm:
-    double psi_cmd_; //computed heading command
-    double lateral_err_; //path lateral offset error
-
-    double current_speed_des_;
-    double current_omega_des_;
 
     //state variables, (x,y,psi) and (speed, omega)
     double state_x_;
@@ -69,6 +61,7 @@ private:
     double K_PSI; // control gains for steering
     double K_LAT_ERR_THRESH;
     double K_TRIP_DIST;
+    double K_PHI;
 // dynamic limitations:
     double MAX_SPEED; // m/sec; tune this
     double MAX_SPIN_RATE; // rad/sec; tune this

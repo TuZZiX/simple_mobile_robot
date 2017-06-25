@@ -15,6 +15,7 @@ SteeringController::SteeringController(ros::NodeHandle &nodehandle) : nh(nodehan
     K_TRIP_DIST = 1.0;
     MAX_SPEED = 1.0; // m/sec; tune this
     MAX_SPIN_RATE = 0.8; // rad/sec; tune this
+    K_PHI = 1.0;
 
     nh.param("UPDATE_RATE", UPDATE_RATE, UPDATE_RATE);
     nh.param("K_PSI", K_PSI, K_PSI);
@@ -22,6 +23,7 @@ SteeringController::SteeringController(ros::NodeHandle &nodehandle) : nh(nodehan
     nh.param("MAX_SPEED", MAX_SPEED, MAX_SPEED);
     nh.param("MAX_SPIN_RATE", MAX_SPIN_RATE, MAX_SPIN_RATE);
     nh.param("K_TRIP_DIST", K_TRIP_DIST, K_TRIP_DIST);
+    nh.param("K_PHI", K_PHI, K_PHI);
 
     des_state_subscriber_ = nh.subscribe("/des_state", 1, &SteeringController::desStateCallback, this);
     odom_subscriber_ = nh.subscribe("/odom", 1, &SteeringController::odomCallback, this); //subscribe to odom messages
@@ -46,9 +48,6 @@ SteeringController::SteeringController(ros::NodeHandle &nodehandle) : nh(nodehan
     des_state_y_ = 0.0;
     des_state_psi_ = 0.0;
 
-    // make sure the speed/spin commands are set to zero
-    current_speed_des_ = 0.0;  // 
-    current_omega_des_ = 0.0;
     sleep_timer.fromSec(1 / UPDATE_RATE);
 }
 
@@ -109,9 +108,6 @@ double SteeringController::convertPlanarQuat2Phi(geometry_msgs::Quaternion quate
 
 // HERE IS THE STEERING ALGORITHM: USE DESIRED AND ACTUAL STATE TO COMPUTE AND PUBLISH CMD_VEL
 void SteeringController::NlSteering() {
-    double controller_speed;
-    double controller_omega;
-
     // have access to: des_state_vel_, des_state_omega_, des_state_x_, des_state_y_,
     //  des_state_phi_ and corresponding robot state values
     double tx = cos(des_state_psi_); // [tx,ty] is tangent of desired path
@@ -122,17 +118,17 @@ void SteeringController::NlSteering() {
     double dx = state_x_ - des_state_x_;  //x-error relative to desired path
     double dy = state_y_ - des_state_y_;  //y-error
 
-    lateral_err_ = dx * nx + dy * ny; //lateral error is error vector dotted with path normal
+    double lateral_err_ = dx * nx + dy * ny; //lateral error is error vector dotted with path normal
     // lateral offset error is positive if robot is to the left of the path
     double trip_dist_err = dx * tx + dy * ty; // progress error: if positive, then we are ahead of schedule
     //heading error: if positive, should rotate -omega to align with desired heading
-    double heading_err = minSpin(state_psi_ - des_state_psi_);
-    double strategy_psi = psiStrategy(lateral_err_) + heading_err; //heading command, based on NL algorithm
-    controller_omega = omegaCmdFnc(strategy_psi, state_psi_, des_state_psi_);
+    double heading_err = minSpin(des_state_psi_ - state_psi_);
+    double strategy_psi = minSpin(lateral_err_ + K_PHI * heading_err); //heading command, based on NL algorithm
+    double controller_omega = omegaCmdFnc(strategy_psi, state_psi_, des_state_psi_);
 
-    controller_speed = sat(des_state_speed_ + K_TRIP_DIST * trip_dist_err,
-                           MAX_SPEED); // default...should speed up/slow down appropriately
+    double controller_speed = sat(sat(des_state_speed_, MAX_SPEED) + sat(K_TRIP_DIST * trip_dist_err, MAX_SPEED), MAX_SPEED); // default...should speed up/slow down appropriately
     // send out our speed/spin commands:
+    geometry_msgs::Twist twist_cmd_;
     twist_cmd_.linear.x = controller_speed;
     twist_cmd_.angular.z = controller_omega;
     cmd_publisher_.publish(twist_cmd_);
@@ -146,9 +142,8 @@ double SteeringController::psiStrategy(double offset_err) {
 }
 
 double SteeringController::omegaCmdFnc(double psi_strategy, double psi_state, double psi_path) {
-    psi_cmd_ = psi_strategy + psi_path;
-    double omega_cmd = K_PSI * (psi_cmd_ - psi_state);
-    omega_cmd = MAX_SPIN_RATE * sat(omega_cmd / MAX_SPIN_RATE); //saturate the command at specified limit
+    double omega_cmd = K_PSI * (psi_strategy + psi_path - psi_state); //computed heading command
+    omega_cmd = sat(omega_cmd, MAX_SPIN_RATE); //saturate the command at specified limit
     return omega_cmd;
 }
 

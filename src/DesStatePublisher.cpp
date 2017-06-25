@@ -9,8 +9,8 @@ DesStatePublisher::DesStatePublisher(ros::NodeHandle &nh) : nh_(nh) {
     estop_service_ = nh_.advertiseService("estop_service", &DesStatePublisher::estopServiceCallback, this);
     estop_clear_service_ = nh_.advertiseService("clear_estop_service", &DesStatePublisher::clearEstopServiceCallback, this);
     flush_path_queue_ = nh_.advertiseService("flush_path_queue_service", &DesStatePublisher::flushPathQueueCB, this);
-    append_path_subscriber_ = nh_.subscribe("append_path_queue", 1, &DesStatePublisher::appendPathQueueCB, this);
-    alarm_subscriber_ = nh_.subscribe("lidar_alarm", 1, &DesStatePublisher::alarmCB, this);
+    append_path_subscriber_ = nh_.subscribe("append_path_queue", 10, &DesStatePublisher::appendPathQueueCB, this);
+    alarm_subscriber_ = nh_.subscribe("lidar_alarm", 10, &DesStatePublisher::alarmCB, this);
 
     //define a halt state; zero speed and spin, and fill with viable coords
     halt_twist_.linear.x = 0.0;

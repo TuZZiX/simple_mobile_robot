@@ -2,8 +2,8 @@
 // Created by tianshipei on 2/14/16.
 //
 
-#ifndef MOBOT_GENERAL_H
-#define MOBOT_GENERAL_H
+#ifndef ROBOT_COMMANDER_H
+#define ROBOT_COMMANDER_H
 
 #include <ros/ros.h>
 #include <geometry_msgs/Twist.h>
@@ -20,7 +20,7 @@
 
 class RobotCommander {
 public:
-    RobotCommander(ros::NodeHandle &nodehandle, std::string topic = "cmd_vel");
+    RobotCommander(ros::NodeHandle &nodeHandle, std::string topic = "cmd_vel");
     // stop the r
     void stop();
     // keep spinning to one direction without stop
@@ -43,10 +43,9 @@ public:
 private:
     ros::NodeHandle nh;
     ros::Publisher twist_commander;
-    ros::Timer controlUpdater;
     double sample_dt;
     double speed;
     double yaw_rate;
 };
 
-#endif //MOBOT_GENERAL_H
+#endif //ROBOT_COMMANDER_H

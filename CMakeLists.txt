@@ -25,25 +25,25 @@ SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
 
 # Libraries: uncomment the following and edit arguments to create a new library
 # cs_add_library(my_lib src/my_lib.cpp)
-cs_add_library(RobotCommander src/RobotCommander.cpp)
+cs_add_library(RobotCommander src/RobotCommander.cpp src/BetterRobotCommander.cpp include/BetterRobotCommander.h)
 cs_add_library(TrajBuilder src/TrajBuilder.cpp)
 
 # Executables: uncomment the following and edit arguments to compile new nodes
 # may add more of these lines for more nodes from the same package
-cs_add_executable(path_move src/path_move.cpp)
+cs_add_executable(square_move src/square_move.cpp)
 cs_add_executable(circle_move src/circle_move.cpp)
-cs_add_executable(lidar_brake src/lidar_brake.cpp)
+cs_add_executable(lidar_estop src/lidar_brake.cpp)
 cs_add_executable(keyboard_controller src/keyboard_controller.cpp)
 cs_add_executable(steering_controller src/steering_controller.cpp)
-cs_add_executable(path_move2 src/DesStatePublisher.cpp src/des_state_publisher_main.cpp)
-cs_add_executable(des_state_forwarder src/des_state_forwarder.cpp)
+cs_add_executable(path_move src/DesStatePublisher.cpp src/des_state_publisher_main.cpp)
+cs_add_executable(command_forwarder src/des_state_forwarder.cpp)
 
 
 #the following is required, if desire to link a node in this package with a library created in this same package
 # edit the arguments to reference the named node and named library within this package
-target_link_libraries(lidar_brake RobotCommander)
-target_link_libraries(path_move RobotCommander)
-target_link_libraries(path_move2 TrajBuilder)
+target_link_libraries(lidar_estop RobotCommander)
+target_link_libraries(square_move RobotCommander)
+target_link_libraries(path_move TrajBuilder)
 
 cs_install()
 cs_export()

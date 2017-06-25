@@ -7,8 +7,7 @@ import rospy
 
 
 def kill_process():
-    global process
-    if process:
+    if "process" in globals():
         process.terminate()
 
 def run_command(command):
@@ -16,6 +15,7 @@ def run_command(command):
     process = subprocess.Popen(command, shell=True)
 
 def main():
+    rospy.init_node("delay_launcher", anonymous=True)
     sleep_time = 5.0    # default
     args = []
     if len(sys.argv) >= 3:
@@ -25,27 +25,33 @@ def main():
         print("Wrong number of arguments!")
         exit(0)
 
-    # something for this project only
     for i, val in enumerate(args):
-        if args[i] == "keyboard":
+        if "__" in args[i]:
+            args.pop(i)
+        # something for this project only
+        elif args[i] == "keyboard":
             args[i] = "rosrun simple_mobile_robot keyboard_controller"
-        elif args[i] == "none":
-            exit(0)
         elif args[i] == "square":
-            args[i] = "rosrun simple_mobile_robot path_move"
+            args[i] = "rosrun simple_mobile_robot square_move"
         elif args[i] == "circle":
             args[i] = "rosrun simple_mobile_robot circle_move"
-        elif '__' in args[i]:
-            args[i] = ""
+        elif args[i] == "none":
+            exit(0)
 
     command = " ".join(args)
-    print("Run [%s], after %f s" % (str(command), sleep_time))
+    rospy.loginfo("Run: %s, after %f s" % (command, sleep_time))
     time.sleep(sleep_time)
+    rospy.loginfo("Start: %s" % command)
     run_command(command)
     while not rospy.is_shutdown():
         time.sleep(sleep_time)  # wait forever, this process will run as daemon process
 
 
 if __name__ == "__main__":
-    rospy.on_shutdown(kill_process)
-    main()
+    try:
+        rospy.on_shutdown(kill_process)
+        main()
+    except Exception as e:
+        print(e)
+        kill_process()
+        exit(0)

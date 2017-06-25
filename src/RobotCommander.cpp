@@ -4,7 +4,7 @@
 
 #include <RobotCommander.h>
 
-RobotCommander::RobotCommander(ros::NodeHandle &nodehandle, std::string topic) : nh(nodehandle) {
+RobotCommander::RobotCommander(ros::NodeHandle &nodeHandle, std::string topic) : nh(nodeHandle) {
     sample_dt = 0.01;
     speed = 1.0; // 1m/s speed command
     yaw_rate = 0.5; //0.5 rad/sec yaw rate command
@@ -17,6 +17,7 @@ void RobotCommander::stop() {
 }
 
 void RobotCommander::turn(double rad) {
+    rad = minSpin(rad);
     double time = fabs(rad) / yaw_rate;
     double timer = 0.0;
     ros::Rate loop_timer(1 / sample_dt);
