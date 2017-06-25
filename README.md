@@ -125,6 +125,8 @@ It will wait a short period for Gazebo to finish loading and then start the move
 
 Here is a demo about using this launch file and ways to interact with the robot: https://youtu.be/vKvUAmQZhHI
 
+---
+
 ### Nodes
 
 After the launch file finish loading, you can start the following nodes to command the robot.
@@ -225,15 +227,31 @@ Do not use them as they are still under construction.
 
 ### Trajectory Builder
 
-
+A path builder that can build a sequence of via points and states between specify start and end pose.
 
 ### Absolute path move
 
+Command the robot by specify absolute points (with respect with odom_frame). Response to lidar_alarm to gracefully come to halt. Also listening to `/append_path_queue` and response to `/flush_path_queue_service` for adding goal points or remove all goal points.
+
+Use Trajectory Builder to build the path.
+
+Run:
+
 `rosrun simple_mobile_robot path_move`
+
+or `rosrun simple_mobile_robot path_move test`
+
+or `rosrun simple_mobile_robot path_move square 1.5`
 
 ### Steering Correction
 
+A steering correction algorithm to correct the drifting cause by the passive wheel or any source. It will try to align the robot to `desired state published by path_move.
+
+ Run:
+
 `rosrun simple_mobile_robot steering_controller`
+
+If you don't want any steering correction, simply forward velocity command from desired state published by path_move.
 
 `rosrun simple_mobile_robot des_state_forwarder`
 

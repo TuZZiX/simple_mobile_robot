@@ -46,7 +46,7 @@ int main(int argc, char **argv) {
                                     quat2ang(g_current_pose.orientation)); //x=0, y=0, psi=0
     //put some points in the path queue--hard coded here
     if (argc > 1 && (strcmp(argv[1], "test") == 0)) {
-        desStatePublisher.append_path_queue(0.5, 0.0, 0.0);
+        desStatePublisher.append_path_queue(1, 0.0, 0.0);
     } else if (argc > 1 && (strcmp(argv[1], "square") == 0)) {
         double circle_length = atof(argv[2]);
         desStatePublisher.append_path_queue(circle_length, 0.0, 0.0);
@@ -56,11 +56,6 @@ int main(int argc, char **argv) {
         desStatePublisher.append_path_queue(circle_length, -1 * circle_length, 0.0);
         desStatePublisher.append_path_queue(circle_length, circle_length, -M_PI / 2);
         desStatePublisher.append_path_queue(0.0, circle_length, 0.0);
-    } else if (argc > 1 && (strcmp(argv[1], "circle") == 0)) {
-        double diameter = atof(argv[2]);
-        desStatePublisher.append_path_queue(0.0, 7.0, -M_PI / 2);
-        desStatePublisher.append_path_queue(-9.0, 7.0, -M_PI);
-        desStatePublisher.append_path_queue(-9.0, 0.0, M_PI / 2);
     } else {
         desStatePublisher.append_path_queue(0.0, 0.0, 0.0);
     }
