@@ -55,11 +55,11 @@ void BetterRobotCommander::turn(double rad) {
 
 void BetterRobotCommander::updateCallback(const ros::TimerEvent &event) {
     double spin_to_stop = (current_spin_rate * current_spin_rate / spin_acc) / 2;
-    if (fabs(target_spin - current_spin) < spin_to_stop) {
+    if (fabs(target_spin - current_spin) <= spin_to_stop) {
         spin_dir = NONE;
     }
     double distance_to_stop = (current_speed * current_speed / speed_acc) / 2;
-    if (fabs(target_distance - current_distance) < distance_to_stop) {
+    if (fabs(target_distance - current_distance) <= distance_to_stop) {
         move_dir = NONE;
     }
     if (spin_dir == LEFT) {

@@ -1,7 +1,7 @@
 #include <ros/ros.h>
 #include <sensor_msgs/LaserScan.h>
 #include <std_msgs/Bool.h>
-#include <BetterRobotCommander.h>
+#include <RobotCommander.h>
 
 /** Set alarm if anything is within 0.5m of the front of robot, or too
     close to the sides. */
@@ -24,7 +24,7 @@ ros::Publisher lidar_alarm_publisher_r;
 
 void laserCallback(const sensor_msgs::LaserScan &laser_scan) {
     static ros::NodeHandle nh;
-    static BetterRobotCommander robot(nh, "brake_vel");   // temp object for braking the robot
+    static RobotCommander robot(nh, "brake_vel");   // temp object for braking the robot
     std_msgs::Bool lidar_alarm_msg;
     int i = laser_scan.ranges.size();
     double angle_min_, angle_increment_, theta_i, x, y, r;
@@ -79,7 +79,7 @@ void laserCallback(const sensor_msgs::LaserScan &laser_scan) {
     }
     if (brake_enabled && laser_alarm_l || laser_alarm_r) {
         // slowly move backward to release the lock
-        robot.setMaxSpeed(0.1);
+        robot.setSpeed(0.1);
         robot.go(BACKWARD);
     }
     if (!(laser_alarm_l || laser_alarm_r) && brake_enabled) {

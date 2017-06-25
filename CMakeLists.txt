@@ -25,7 +25,7 @@ SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
 
 # Libraries: uncomment the following and edit arguments to create a new library
 # cs_add_library(my_lib src/my_lib.cpp)
-cs_add_library(RobotCommander src/BetterRobotCommander.cpp)
+cs_add_library(RobotCommander src/RobotCommander.cpp src/BetterRobotCommander.cpp)
 cs_add_library(TrajBuilder src/TrajBuilder.cpp)
 
 # Executables: uncomment the following and edit arguments to compile new nodes

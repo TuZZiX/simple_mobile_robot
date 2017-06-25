@@ -11,7 +11,7 @@ int main(int argc, char **argv) {
     ros::Publisher twist_publisher = nh.advertise<geometry_msgs::Twist>("path_vel", 10);
     double diameter = 3;
     double speed = 1.0;
-    if (argc >= 1) {
+    if (argc >= 2) {
         diameter = atof(argv[1]);
     } else {
         std::cout << "Wrong number of parameters! Use default parameter diameter = " << diameter << std::endl
@@ -23,11 +23,11 @@ int main(int argc, char **argv) {
     }
     nh.param("MAX_SPEED", speed, speed); // get speed from param server
     double radius = (diameter / 2) * 1.1; // a small compensation
-    radius = -1 * radius; // reverse clockwise and counter clockwise
     geometry_msgs::Twist twist;
     twist.linear.x = speed;
     twist.angular.z = speed / radius; // w = v/r
-    ROS_INFO("start circular move with speed = %f, diameter = %f", speed, diameter);
+    ROS_INFO("start circular move with speed = %f, diameter = %f, in %s",
+                speed, diameter, (diameter > 0 ? "clockwise" : "counter clockwise"));
 
     while (ros::ok()) {
         twist_publisher.publish(twist);
