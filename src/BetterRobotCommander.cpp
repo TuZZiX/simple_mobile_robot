@@ -4,7 +4,7 @@
 
 #include "BetterRobotCommander.h"
 
-BetterRobotCommander::BetterRobotCommander(ros::NodeHandle &nodeHandle, std::string topic) : nh(nodeHandle), spinner(1) {
+BetterRobotCommander::BetterRobotCommander(ros::NodeHandle &nodeHandle, std::string topic) : nh(nodeHandle){
     dt = 0.01;
     max_speed = 1.0; // 1m/s speed command
     max_spin_rate = 0.5; //0.5 rad/sec yaw rate command
@@ -12,7 +12,6 @@ BetterRobotCommander::BetterRobotCommander(ros::NodeHandle &nodeHandle, std::str
     spin_acc = 1.0;
     twist_commander = nh.advertise<geometry_msgs::Twist>(topic, 10);
     controller_timer = nh.createTimer(ros::Duration(dt), &BetterRobotCommander::updateCallback, this);
-    spinner.start();
 }
 
 void BetterRobotCommander::stop() {

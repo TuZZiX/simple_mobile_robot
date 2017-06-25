@@ -60,7 +60,7 @@ private:
 
 class DirectionController {
 public:
-    DirectionController(ros::NodeHandle &nodeHandle): nh(nodeHandle), spinner(1) {
+    DirectionController(ros::NodeHandle &nodeHandle): nh(nodeHandle), spinner(0) {
         MAX_SPEED = 1.0;
         MAX_SPIN_RATE = 0.8;
         MAX_ACC = 3.0;

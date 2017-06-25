@@ -41,8 +41,9 @@ public:
     }
 
     void waitForFinsh() {
-        ros::Duration time(dt);
+        ros::Duration time(dt / 2);
         while (!finished()) {
+            ros::spinOnce();
             time.sleep();
         }
     }
@@ -70,7 +71,6 @@ private:
     ros::NodeHandle nh;
     ros::Publisher twist_commander;
     ros::Timer controller_timer;
-    ros::AsyncSpinner spinner;
 
     double dt;
 
