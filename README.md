@@ -6,8 +6,6 @@ A ROS package for a simple two wheel drive robot.
 
 Tested on ROS Indigo and ROS Kinetic.
 
-Built as a task for an interview. But I personally want to some more cool stuff and see how far this small robot can go.
-
 ## Dependencies
 
 Packages that are not shipped with ros-desktop-full installation are listed here (based on Ubuntu 14.04 or 16.04):
